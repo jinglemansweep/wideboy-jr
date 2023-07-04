@@ -18,3 +18,5 @@ adafruit_minimqtt==7.3.2
 adafruit_portalbase==1.14.8
 asyncio==0.5.22
 cedargrove_palettefader==1.1.1
+adafruit_display_shapes==2.6.2
+adafruit_displayio_layout==1.19.17
