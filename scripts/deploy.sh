@@ -14,7 +14,8 @@ echo
 
 echo "Syncronising project source to destination device (${dest_dir})..."
 echo
-rsync -av --inplace --exclude "${base_dir}/src/" "${dest_dir}/"
+rsync -av --inplace "${base_dir}/src/" "${dest_dir}/"
+cp "${base_dir}/secrets.py" "${dest_dir}/"
 echo
 
 echo "DONE"
