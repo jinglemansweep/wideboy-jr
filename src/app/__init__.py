@@ -2,8 +2,8 @@ import board
 import gc
 import terminalio
 import time
-import adafruit_esp32spi.adafruit_esp32spi_socket as socket
-import adafruit_requests as requests
+import adafruit_esp32spi.adafruit_esp32spi_socketpool as socket
+import adafruit_requests
 
 # from adafruit_bitmap_font import bitmap_font
 from adafruit_display_shapes.roundrect import RoundRect
@@ -83,17 +83,43 @@ splash_group.append(Label(x=1, y=4, font=FONT, text="Wideboy Jr", color=0x220022
 logger("Configuring Display")
 display = matrix.display
 display.rotation = matrix_rotation(accelerometer)
-display.show(splash_group)
+display.root_group = splash_group
 del accelerometer
 
 # NETWORKING
 logger("Configuring Networking")
 network = Network(status_neopixel=None, debug=DEBUG)
 network.connect()
-mac = network._wifi.esp.MAC_address
-host_id = "{:02x}{:02x}{:02x}{:02x}".format(mac[0], mac[1], mac[2], mac[3])
-requests.set_socket(socket, network._wifi.esp)
-logger(f"Host ID: {host_id}")
+print(dir(network))
+print(dir(network._wifi))
+print(dir(network._wifi.requests))
+#mac = network._wifi.esp.MAC_address
+#host_id = "{:02x}{:02x}{:02x}{:02x}".format(mac[0], mac[1], mac[2], mac[3])
+requests = network.requests
+#requests.set_socket(socket, network._wifi.esp)
+#logger(f"Host ID: {host_id}")
+
+# HTTP TESTING
+TEXT_URL = "http://wifitest.adafruit.com/testwifi/index.html"
+JSON_GET_URL = "https://httpbin.org/get"
+JSON_POST_URL = "https://httpbin.org/post"
+
+print("Fetching text from %s" % TEXT_URL)
+response = requests.get(TEXT_URL)
+print("-" * 40)
+
+print("Text Response: ", response.text)
+print("-" * 40)
+response.close()
+
+print("Fetching JSON data from %s" % JSON_GET_URL)
+response = requests.get(JSON_GET_URL)
+print("-" * 40)
+
+print("JSON Response: ", response.json())
+print("-" * 40)
+response.close()
+
 
 # SCREEN
 root_group = Group()
@@ -176,7 +202,7 @@ def run():
     global state
     gc.collect()
     logger("Start Event Loop")
-    display.show(root_group)
+    display.root_group = root_group
     while True:
         gc.collect()
         try:

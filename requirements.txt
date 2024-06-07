@@ -1,4 +1,3 @@
-Found device at /media/louis/CIRCUITPY, running CircuitPython 8.1.0.
 adafruit_fakerequests==1.0.12
 adafruit_lis3dh==5.1.23
 adafruit_miniqr==2.0.1
